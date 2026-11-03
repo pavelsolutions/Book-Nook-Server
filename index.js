@@ -65,6 +65,13 @@ app.get("/books", async (req, res) => {
   res.send(result);
 });
 
+app.get("/books/:id", async(req,res) => {
+    const id = req.params.id;
+    console.log(id, "id");
+
+    res.send({message: `you requested book with id: ${id}`})
+})
+
 
 app.get("/", (req, res) => {
     res.send("Hello World");
