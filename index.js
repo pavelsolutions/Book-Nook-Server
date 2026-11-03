@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import { MongoClient, ObjectId } from 'mongodb';
-import 'dotenv/config'
+import 'dotenv/config';
 
 const PORT =5000;
 
@@ -76,9 +76,64 @@ app.get("/books/:id", async(req,res) => {
 })
 
 
-app.get("/", (req, res) => {
-    res.send("Hello World");
+app.get('/my-books/:email', async(req, res) => {
+    const {email} = req.params
+    const result = await booksCollection.find({email:email}).toArray()
+    res.send(result)
 })
+
+app.put("/books/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updatedBook = req.body;
+
+    const result = await booksCollection.updateOne(
+      { _id: new ObjectId(id) },
+      {
+        $set: {
+          title: updatedBook.title,
+          author: updatedBook.author,
+          category: updatedBook.category,
+          description: updatedBook.description,
+          image: updatedBook.image,
+        },
+      }
+    );
+
+    if (result.matchedCount === 0) {
+      return res.status(404).send({ message: "Book not found" });
+    }
+
+    res.send({
+      message: "Book updated successfully",
+      result,
+    });
+  } catch (error) {
+    res.status(500).send({ message: "Failed to update book" });
+  }
+});
+
+app.delete("/books/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const result = await booksCollection.deleteOne({
+      _id: new ObjectId(id),
+    });
+
+    if (result.deletedCount === 0) {
+      return res.status(404).send({ message: "Book not found" });
+    }
+
+    res.send({
+      message: "Book deleted successfully",
+      result,
+    });
+  } catch (error) {
+    res.status(500).send({ message: "Failed to delete book" });
+  }
+});
+
 
 
 app.listen(PORT, () => {
