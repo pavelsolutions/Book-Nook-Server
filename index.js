@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import { MongoClient } from 'mongodb';
+import { MongoClient, ObjectId } from 'mongodb';
 import 'dotenv/config'
 
 const PORT =5000;
@@ -52,7 +52,7 @@ app.post("/books", async (req, res) => {
 
     // step-2: Insert the data into  the MongoDB collection
      const result = await booksCollection.insertOne(bookData);
-
+    
     //  step-3: Send a response back to the client
      res.send(result);
 })
@@ -69,7 +69,10 @@ app.get("/books/:id", async(req,res) => {
     const id = req.params.id;
     console.log(id, "id");
 
-    res.send({message: `you requested book with id: ${id}`})
+    const result = await booksCollection.findOne({_id: new ObjectId(id) });
+
+    // res.send({message: `you requested book with id: ${id}`})
+    res.send(result);
 })
 
 
