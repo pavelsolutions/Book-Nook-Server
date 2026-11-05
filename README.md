@@ -40,7 +40,7 @@ booknook-backend/
 ### 1. Clone the repository
 
 ```bash
-git clone <YOUR_BACKEND_REPOSITORY_URL>
+git clone https://github.com/pavelsolutions/Book-Nook-Server
 ```
 
 ### 2. Navigate to the project directory

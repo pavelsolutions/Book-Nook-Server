@@ -27,13 +27,12 @@ export async function connectToMongoDB() {
 const connectClient = await connectToMongoDB();
 
 const db = connectClient.db("book-nook");
-
 const booksCollection = db.collection("books");
 const borrowsCollection = db.collection("borrows");
 
 // JWT verification
 const JWKS = createRemoteJWKSet(
-  new URL("http://localhost:3000/api/auth/jwks")
+  new URL(`${process.env.FRONTEND_URI}/api/auth/jwks`)
 );
 
 const verifyToken = async (req, res, next) => {
@@ -512,3 +511,5 @@ app.get("/new-arrivals", async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+
+export default app
